@@ -1,0 +1,200 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-top": 10,
+  "output": ["DP-3"],
+  
+
+  "modules-left": [
+    "group/cpu",
+    "group/gpu",
+    "group/vram",
+    "group/network"
+  ],
+  "modules-center": [
+    "hyprland/workspaces",
+    "clock"
+  ],
+    "modules-right": [
+    "group/audio",
+    "group/keyboard",
+    "group/proton",
+    "group/notification",
+    "group/power"
+  ],
+
+    /* --- GROUP DEFINITIONS --- */
+  
+  "group/cpu": {
+    "orientation": "horizontal",
+    "modules": ["custom/cpu-toggle"],
+  },
+  
+  "group/gpu": {
+    "orientation": "horizontal", 
+    "modules": ["custom/gpu-core-toggle"],
+  },
+
+  "group/vram": {
+    "orientation": "horizontal",
+    "modules": ["custom/gpu-vram-toggle"],
+  },
+  
+  "group/network": {
+    "orientation": "horizontal",
+    "modules": ["custom/network-toggle"],
+  },
+  
+  "group/keyboard": {
+    "orientation": "horizontal",
+    "modules": ["custom/keyboard-cycle"],
+  },
+  
+  "group/notification": {
+      "orientation": "horizontal",
+      "modules": ["custom/notification"],
+  },
+
+  "group/power": {
+      "orientation": "horizontal",
+      "modules": ["custom/power"],
+  },
+
+  "group/proton": {
+      "orientation": "horizontal",
+      "modules": ["custom/proton"],
+  },
+
+  "group/audio": {
+    "orientation": "horizontal",
+    "modules": ["pulseaudio", "pulseaudio/slider"],
+    "drawer": { 
+      "transition-duration": 200,  // Animation duration in ms, or 0 for instant
+      "transition-left-to-right": false
+    }
+  },
+
+
+
+  /* --- LEFT: PERFORMANCE BUTTONS --- */
+  "custom/cpu-toggle": {
+    "exec": "~/.config/waybar/scripts/cpu-toggle.sh",
+    "interval": 2,
+    "return-type": "json",
+    "on-click": "~/.config/waybar/scripts/cpu-toggle.sh toggle",
+    "tooltip": true
+  },
+  
+  "custom/gpu-core-toggle": {
+    "exec": "~/.config/waybar/scripts/gpu-core-toggle.sh",
+    "interval": 2,
+    "return-type": "json",
+    "on-click": "~/.config/waybar/scripts/gpu-core-toggle.sh toggle",
+    "tooltip": true
+  },
+  
+  "custom/gpu-vram-toggle": {
+    "exec": "~/.config/waybar/scripts/gpu-vram-toggle.sh",
+    "interval": 2,
+    "return-type": "json",
+    "on-click": "~/.config/waybar/scripts/gpu-vram-toggle.sh toggle",
+    "tooltip": true
+  },
+  
+  "custom/network-toggle": {
+    "exec": "~/.config/waybar/scripts/network-toggle.sh",
+    "interval": 5,
+    "return-type": "json",
+    "on-click": "~/.config/waybar/scripts/network-toggle.sh toggle",
+    "tooltip": true
+  },
+
+  /* --- CENTER: TEMPLATE (Unchanged) --- */
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "show-special": true,
+    "persistent-workspaces": {
+      "DP-3": [1, 2, 3, 4, 5],
+      "HDMI-A-2": [11, 12, 13],
+      "DP-2": [21, 22, 23]
+    },
+    "on-click": "activate"
+  },
+
+  "clock": {
+    "interval": 1,
+    "format": "{:%H:%M}",
+    "format-alt": "{:%A, %d %B %Y}",
+    "tooltip": true,
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "format": { "today": "<span color='#f5bde6'><b><u>{}</u></b></span>" }
+    },
+    "on-click": "mode"
+  },
+
+  /* --- RIGHT: CONTROL BUTTONS --- */
+
+  "custom/keyboard-cycle": {
+    "exec": "~/.config/waybar/scripts/keyboard-cycle.sh",
+    "interval": 60,           // Check every 60s (in case changed externally)
+    "return-type": "json",
+    "format": "{}",
+    "on-click": "~/.config/waybar/scripts/keyboard-cycle.sh toggle",
+    "tooltip": true,
+    "restart-interval": 5     // Restart script if it crashes
+  },
+
+  "pulseaudio": {
+    "format": "{volume}% {icon} ",
+    "format-muted": " 0%",
+    "format-icons": {
+      "default": ["", ""]
+    },
+    "on-click": "pavucontrol",
+    "on-click-right": "mode",
+    "scroll-step": 5,
+    "tooltip": true,
+    "tooltip-format": "{desc}"
+  },
+
+  "pulseaudio/slider": {
+    "min": 0,
+    "max": 100,
+    "orientation": "horizontal"
+  },
+
+  "custom/notification": {
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓"
+    },
+    "return-type": "json",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "exec-if": "which swaync-client"
+  },
+
+  "custom/proton": {
+    "exec": "~/.config/waybar/scripts/proton-toggle.sh",
+    "interval": 5,
+    "return-type": "json",
+    "format": "{}",
+    "on-click": "protonvpn-app",  // Opens your GUI
+    "tooltip": true
+  },
+
+  "custom/power": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Click: Power Menu\nRight: Suspend",
+    "on-click": "wlogout",
+    "on-click-right": "systemctl suspend"
+  }
+}
+

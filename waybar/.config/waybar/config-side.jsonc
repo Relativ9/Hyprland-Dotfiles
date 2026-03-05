@@ -1,0 +1,18 @@
+{
+  "layer": "top",
+  "position": "top",
+  "output": ["HDMI-A-2", "DP-2"],
+  "margin-top": 10,
+  "modules-center": ["hyprland/workspaces"],
+  
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "show-special": true,
+    "persistent-workspaces": {
+      "HDMI-A-2": [11, 12, 13],
+      "DP-2": [21, 22, 23]
+    },
+    "on-click": "activate"
+  }
+}
+

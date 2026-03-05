@@ -1,0 +1,333 @@
+/* =============================================================================
+   Catppuccin Macchiato Theme for SwayNC
+   ============================================================================= */
+
+/* 1. The Palette (Macchiato) */
+@define-color base       #24273a;
+@define-color mantle     #1e2030;
+@define-color crust      #181926;
+
+@define-color text       #cad3f5;
+@define-color subtext0   #a5adcb;
+@define-color subtext1   #b8c0e0;
+
+@define-color surface0   #363a4f;
+@define-color surface1   #494d64;
+@define-color surface2   #5b6078;
+
+@define-color overlay0   #6e738d;
+@define-color overlay1   #8087a2;
+@define-color overlay2   #939ab7;
+
+@define-color blue       #8aadf4;
+@define-color lavender   #b7bdf8;
+@define-color sapphire   #7dc4e4;
+@define-color sky        #91d7e3;
+@define-color teal       #8bd5ca;
+@define-color green      #a6da95;
+@define-color yellow     #eed49f;
+@define-color peach      #f5a97f;
+@define-color maroon     #ee99a0;
+@define-color red        #ed8796;
+@define-color mauve      #c6a0f6;
+@define-color pink       #f5bde6;
+@define-color flamingo   #f0c6c6;
+@define-color rosewater  #f4dbd6;
+
+/* 2. Logical Mapping */
+@define-color color1     @crust;
+@define-color color2     @red;
+@define-color color3     @mauve;
+@define-color color5     @surface0;
+@define-color color6     @teal;
+
+@define-color background @base;
+@define-color background-sec @mantle;
+@define-color foreground @text;
+
+@define-color text            @foreground;
+@define-color background-alt  alpha(@color1, .6);
+@define-color selected        @color3;
+@define-color hover           alpha(@selected, .4);
+@define-color urgent          @color2;
+
+/* =============================================================================
+   Global Styles
+   ============================================================================= */
+* {
+  color: @text;
+  all: unset;
+  font-size: 14px;
+  font-family: "JetBrains Mono Nerd Font";
+  transition: 200ms;
+}
+
+.blank-window {  
+  background: transparent;  
+}
+
+/* =============================================================================
+   CONTROL CENTER
+   ============================================================================= */
+
+.control-center {
+  background: alpha(@background, 0.85);
+  border-radius: 24px;
+  border: 1px solid @selected;
+  box-shadow: 0 0 15px 0 rgba(0,0,0,0.5);
+  margin: 18px;
+  padding: 12px;
+}
+
+.control-center .notification-row .notification-background {
+  background-color: @background-alt;
+  border-radius: 16px;
+  margin: 4px 0px;
+  padding: 4px;
+  border: 1px solid transparent;
+}
+
+.control-center .notification-row .notification-background .notification.critical {
+  border: 1px solid @urgent;
+  background-color: alpha(@urgent, 0.1);
+}
+
+.control-center .notification-row .notification-background .notification .notification-content {
+  margin: 6px;
+  padding: 8px 6px 2px 2px;
+}
+
+.control-center .notification-row .notification-background .notification > *:last-child > * {
+  min-height: 3.4em;
+}
+
+.control-center .notification-row .notification-background .notification > *:last-child > * .notification-action {
+  background: alpha(@selected, 0.3);
+  color: @text;
+  border-radius: 12px;
+  margin: 6px;
+  border: 1px solid transparent;
+}
+
+.control-center .notification-row .notification-background .notification > *:last-child > * .notification-action:hover {
+  background: @selected;
+  color: @crust;
+}
+
+.control-center .notification-row .notification-background .close-button {
+  background: transparent;
+  border-radius: 6px;
+  color: @subtext0;
+  margin: 0px;
+  padding: 4px;
+}
+
+.control-center .notification-row .notification-background .close-button:hover {
+  background-color: @urgent;
+  color: @crust;
+}
+
+progressbar trough {
+  background-color: @surface0;
+  border-radius: 12px;
+}
+
+progressbar progress {
+  background-color: @selected;
+  border-radius: 12px;
+}
+
+.notification-group-headers {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: @subtext1;
+  letter-spacing: 1px;
+}
+
+.notification-group-collapse-button,
+.notification-group-close-all-button {
+  background: transparent;
+  color: @subtext0;
+  margin: 4px; 
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.notification-group-collapse-button:hover,
+.notification-group-close-all-button:hover {
+  background: @hover;
+  color: @text;
+}
+
+/* =============================================================================
+   FLOATING NOTIFICATIONS
+   ============================================================================= */
+
+.floating-notifications.background .notification-row .notification-background {
+  background: alpha(@background, 0.9);
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.6);
+  border: 1px solid @selected;
+  border-radius: 24px;
+  margin: 16px;
+  padding: 0;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification.critical {
+  border: 2px solid @urgent;
+}
+
+.floating-notifications.background .notification-row .notification-background .close-button:hover {
+  background-color: @selected;
+  color: @crust;
+}
+
+/* =============================================================================
+   WIDGETS
+   ============================================================================= */
+
+/* Title Widget */
+.widget-title {
+  font-size: 1.2em;
+  margin: 6px;
+  color: @subtext1;
+}
+
+.widget-title button {
+  background: @background-alt;
+  border-radius: 8px;
+  padding: 6px 16px;
+  color: @text;
+  border: 1px solid transparent;
+}
+
+.widget-title button:hover {
+  background-color: @selected;
+  color: @crust;
+  border: 1px solid @selected;
+}
+
+/* DND Switch */
+.widget-dnd {
+  margin: 6px;
+  font-size: 1.1rem;
+  color: @subtext1;
+}
+
+.widget-dnd > switch {
+  background: @background-alt;
+  border-radius: 8px;
+  padding: 2px;
+  border: 1px solid @surface0;
+}
+
+.widget-dnd > switch:hover {
+  background: @hover;
+}
+
+.widget-dnd > switch:checked {
+  background: @selected;
+  border: 1px solid @selected;
+}
+
+.widget-dnd > switch:checked:hover {
+  background: @selected;
+}
+
+.widget-dnd > switch slider {
+  background: @text;
+  border-radius: 6px;
+}
+
+/* =============================================================================
+   BUTTONS GRID - COMPLETE WITH CHECKED STATE
+   ============================================================================= */
+.widget-buttons-grid {
+  font-size: x-large;
+  padding: 6px;
+  margin: 6px;
+  border-radius: 12px;
+  background: @background-alt;
+  border: 1px solid @surface0;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  margin: 4px;
+  padding: 10px;
+  background: transparent;
+  border-radius: 8px;
+  color: @text;
+  border: 1px solid transparent;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+  background: @hover;
+  color: @text;
+  border: 1px solid @selected;
+}
+
+/* THIS IS THE ACTIVE/TOGGLED STATE */
+.widget-buttons-grid > flowbox > flowboxchild > button:checked {
+  background: @peach;
+  color: @crust;
+  border: 1px solid @peach;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:checked:hover {
+  background: @maroon;
+  border: 1px solid @maroon;
+}
+
+/* =============================================================================
+   MPRIS - Clean Style (Reverted)
+   ============================================================================= */
+
+.widget-mpris {
+  background: @background-alt;
+  border-radius: 16px;
+  color: @text;
+  margin: 10px 6px;
+  border: 1px solid @surface0;
+}
+
+.widget-mpris-player {
+  background-color: @background-sec;
+  border-radius: 16px;
+  padding: 8px;
+  margin: 6px;
+  border: 1px solid @surface0;
+}
+
+.widget-mpris .widget-mpris-album-art {
+  border-radius: 32px;
+}
+
+/* Back to clean buttons - but visible */
+.widget-mpris > box > button {
+  color: @text;
+  border-radius: 20px;
+  min-width: 30px;
+  min-height: 30px;
+  /* Semi-transparent background so text is readable over any art color */
+  background: alpha(@crust, 0.7);
+  margin: 2px;
+}
+
+.widget-mpris button:hover {
+  background: @selected;
+  color: @crust;
+}
+
+.widget-mpris-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: @text;
+}
+
+.widget-mpris-subtitle {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: @subtext0;
+}
+
+
+

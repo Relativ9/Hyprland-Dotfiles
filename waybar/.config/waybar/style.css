@@ -1,0 +1,297 @@
+@import 'colors/catppuccin.css';
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "Adwaita Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 0;
+    margin: 0px;
+    padding: 0;
+}
+
+window#waybar { 
+    background: transparent; 
+}
+
+tooltip {
+    background: @crust;
+    border: 1px solid @overlay0;
+    border-radius: 12px;
+    padding: 8px;
+}
+tooltip label { 
+    color: @text; 
+    margin: 4px; 
+}
+
+/* =========================================
+   UNIVERSAL PILL STYLING
+   Inner: @mantle (dark background)
+   Outer: @base (light border)
+   Border: 4px solid
+   Radius: 18px
+   ========================================= */
+
+/* --- CENTER MODULES --- */
+
+/* Workspaces (contains buttons inside) */
+#workspaces {
+    background: @mantle;
+    color: @subtext1;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 8px;
+    margin: 0px 4px;
+}
+
+#workspaces button {
+    padding: 4px 8px;
+    margin: 0 2px;
+    border-radius: 8px;
+    color: @subtext1;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    background: @surface2;
+    color: @rosewater;
+    font-weight: bold;
+}
+
+#workspaces button:hover {
+    background: @surface0;
+    color: @lavender;
+}
+
+#workspaces button.urgent {
+    background: @red;
+    color: @crust;
+    animation: blink 1s linear infinite;
+}
+
+#workspaces button.special {
+    color: @yellow;
+    border: 1px dashed @yellow;
+}
+
+/* Clock */
+#clock {
+    background: @mantle;
+    color: @blue;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 14px;
+    margin: 0px 4px;
+}
+
+/* --- LEFT MODULES --- */
+
+/* CPU */
+#custom-cpu-toggle {
+    background: @mantle;
+    color: @sky;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 12px;
+    margin: 6px 4px 6px 20px;
+}
+
+/* GPU Core (fused with VRAM) */
+#custom-gpu-core-toggle {
+    background: @mantle;
+    color: @flamingo;
+    border: 4px solid @base;
+    border-radius: 18px;
+    border-right-width: 2px;        /* Half border for fusion */
+    padding: 4px 12px;
+    margin: 6px 4px 6px 4px;      
+}
+
+/* GPU VRAM (fused with Core) */
+#custom-gpu-vram-toggle {
+    background: @mantle;
+    color: @mauve;
+    border: 4px solid @base;
+    border-radius: 18px;
+    border-left-width: 2px;         /* Half border for fusion */
+    padding: 4px 12px;
+    margin: 6px 4px 6px 4px;      /* No left margin */
+}
+
+/* Network */
+#custom-network-toggle {
+    background: @mantle;
+    color: @sapphire;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 12px;
+    margin: 6px 4px 6px 4px;
+}
+
+/* --- RIGHT MODULES --- */
+
+/* Keyboard Layout */
+#custom-keyboard-cycle {
+    background: @mantle;
+    color: @green;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 12px;
+    margin: 6px 4px 6px 4px;
+}
+
+/* Audio Group - Icon */
+#pulseaudio {
+    background: @mantle;
+    color: @peach;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 12px;
+    margin: 6px 4px 6px 4px;     /* Right margin 0 */
+    min-width: 40px;
+}
+
+/* Audio Group - Slider */
+#pulseaudio-slider {
+    background: @mantle;
+    border: 4px solid @base;
+    border-radius: 18px;
+    margin: 6px 4px 6px 4px;     /* Left margin 0 */
+    padding: 4px 12px 4px 8px;
+    min-width: 100px;            /* Space for slider */
+}
+
+/* Slider Widget Styling */
+#pulseaudio-slider slider {
+    min-height: 16px;
+    min-width: 16px;
+    background: @text;
+    border-radius: 18px;
+}
+
+#pulseaudio-slider trough {
+    min-height: 8px;
+    min-width: 80px;
+    border-radius: 18px;
+    background: @surface0;
+}
+
+#pulseaudio-slider highlight {
+    border-radius: 18px;
+    background: @peach;
+}
+
+/* Notification */
+#custom-notification {
+    background: @mantle;
+    color: @overlay2;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 12px;
+    margin: 6px 4px 6px 4px;
+}
+
+#custom-proton {
+    background: @mantle;
+    color: @green;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 12px;
+    margin: 6px 4px;
+}
+
+#custom-proton.proton-disconnected {
+    color: @overlay0;
+}
+
+
+/* Power */
+#custom-power {
+    background: @mantle;
+    color: @red;
+    border: 4px solid @base;
+    border-radius: 18px;
+    padding: 4px 10px;
+    margin: 6px 20px 6px 4px;
+    font-size: 16px;
+}
+
+/* =========================================
+   HOVER STATES
+   Lightens the inner background
+   ========================================= */
+
+#clock:hover,
+#custom-cpu-toggle:hover,
+#custom-gpu-core-toggle:hover,
+#custom-gpu-vram-toggle:hover,
+#custom-network-toggle:hover,
+#custom-keyboard-cycle:hover,
+#pulseaudio:hover,
+#custom-notification:hover,
+#custom-power:hover {
+    background: @surface0;
+}
+
+/* =========================================
+   SCREEN EDGE PADDING
+   ========================================= */
+.modules-left > widget:first-child { 
+    margin-left: 15px; 
+}
+.modules-right > widget:last-child { 
+    margin-right: 15px; 
+}
+
+/* =========================================
+   VERTICAL MONITORS (Same styling)
+   ========================================= */
+window#waybar.vertical .modules-left,
+window#waybar.vertical .modules-right {
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    min-height: 0;
+    background: transparent;
+}
+
+window#waybar.vertical .modules-center {
+    background: transparent;
+    margin: 10px 0;
+    padding: 0;
+}
+
+window#waybar.vertical #workspaces {
+    background: @mantle;
+    border: 4px solid @base;
+    margin: 6px 10px;
+    padding: 4px 8px;
+    border-radius: 18px;
+}
+
+window#waybar.vertical #workspaces button {
+    padding: 8px 4px;
+    margin: 4px 0;
+}
+
+window#waybar.vertical #clock {
+    background: @mantle;
+    border: 4px solid @base;
+    margin: 6px 10px;
+    padding: 4px 14px;
+    border-radius: 18px;
+}
+
+window#waybar.vertical #clock label {
+    color: @blue;
+    font-size: 12px;
+}
+
+@keyframes blink {
+    to { background: transparent; color: @red; }
+}
+

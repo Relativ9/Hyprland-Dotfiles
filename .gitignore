@@ -1,0 +1,40 @@
+# Auto-generated backup files
+*.save
+*.save.*
+*.bak
+*.old
+*.OLD
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs and cache
+*.log
+cache/
+Cache/
+
+# Secrets and keys (never commit these!)
+**.pem
+**.key
+*secret*
+*token*
+*password*
+*.env
+
+# Editor backup/swap files
+*~
+.swp
+.swo
+
+# Large media files (wallpapers, images)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.webp
+
+# Package list (optional - keep local only if you prefer)
+# pkglist.txt
+

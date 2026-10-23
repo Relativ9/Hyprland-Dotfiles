@@ -30,8 +30,10 @@ grub
 gst-plugin-pipewire
 guvcview
 htop
+hypridle
 hyprland
 hyprlauncher
+hyprlock
 hyprmon-bin
 hyprpicker
 hyprpolkitagent
@@ -53,8 +55,8 @@ linux-headers
 nano
 naps2
 neovim
-network-manager-applet
 networkmanager
+network-manager-applet
 ninja
 nodejs
 nomacs
@@ -64,8 +66,8 @@ nvidia-open-dkms
 nvidia-settings
 nwg-displays
 nwg-look
-obs-studio
 obsidian
+obs-studio
 os-prober
 pavucontrol
 pipewire
@@ -83,6 +85,7 @@ rust
 rwpspread
 sane
 sane-airscan
+satty
 sbctl
 signal-desktop
 simple-scan
@@ -113,6 +116,7 @@ wget
 wireless_tools
 wireplumber
 wlogout
+wlsunset
 wofi
 wpa_supplicant
 xdg-desktop-portal-hyprland

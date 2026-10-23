@@ -12,11 +12,12 @@
     "group/network"
   ],
   "modules-center": [
-    "hyprland/workspaces",
+    "group/wsbox",
     "clock"
   ],
     "modules-right": [
     "group/audio",
+    "bluetooth",
     "group/keyboard",
     "group/proton",
     "group/notification",
@@ -110,15 +111,24 @@
   },
 
   /* --- CENTER: TEMPLATE (Unchanged) --- */
-  "hyprland/workspaces": {
+  "ext/workspaces": {
     "format": "{name}",
-    "show-special": true,
-    "persistent-workspaces": {
-      "DP-3": [1, 2, 3, 4, 5],
-      "HDMI-A-2": [11, 12, 13],
-      "DP-2": [21, 22, 23]
-    },
-    "on-click": "activate"
+    "sort-by-id": true,
+    "all-outputs": false
+  },
+
+  "group/wsbox": {
+    "orientation": "horizontal",
+    "modules": ["ext/workspaces", "custom/special"]
+  },
+
+  "custom/special": {
+    "exec": "~/.config/waybar/scripts/special-indicator.sh DP-3",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "hide-empty-text": true,
+    "tooltip": true
   },
 
   "clock": {
@@ -163,6 +173,19 @@
     "min": 0,
     "max": 100,
     "orientation": "horizontal"
+  },
+
+  "bluetooth": {
+    "format": "󰂯",
+    "format-on": "󰂯",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format": "{controller_alias}\t{controller_address}",
+    "tooltip-format-connected": "{controller_alias}\n{num_connections} connected\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "on-click": "blueman-manager",
+    "on-click-right": "rfkill toggle bluetooth"
   },
 
   "custom/notification": {

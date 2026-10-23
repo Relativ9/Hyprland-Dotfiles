@@ -31,16 +31,24 @@ IS_SPECIAL=$(echo "$CURRENT_WS" | grep -c "special:${SCRATCH_NAME}")
 # Arg 1: "toggle" (Super+S) or "move" (Super+Shift+S)
 MODE="${1:-toggle}"
 
+# Hyprland 0.56+ runs Lua-only dispatchers (legacy "togglespecialworkspace" /
+# "movetoworkspace" strings are rejected), so use hl.dsp.* via "hyprctl dispatch".
 if [ "$MODE" == "toggle" ]; then
-    hyprctl dispatch togglespecialworkspace "$SCRATCH_NAME"
+    hyprctl dispatch "hl.dsp.workspace.toggle_special(\"${SCRATCH_NAME}\")"
 
 elif [ "$MODE" == "move" ]; then
     if [ "$IS_SPECIAL" -gt 0 ]; then
-
-        hyprctl dispatch movetoworkspace current
-  
+        # Leaving the scratchpad: move the window to a normal workspace on this
+        # monitor (lowest id > 0), so it never gets stranded in the special workspace.
+        MON_NAME=$(hyprctl monitors -j | jq -r --argjson id "$CURRENT_MONITOR_ID" '.[] | select(.id == $id) | .name')
+        TARGET_WS=$(hyprctl workspaces -j | jq -r --arg mon "$MON_NAME" '[.[] | select(.monitor == $mon and .id > 0) | .id] | min // empty')
+        # Fallback to workspace 1 if the monitor has no normal workspace listed
+        if [ -z "$TARGET_WS" ]; then
+            TARGET_WS=1
+        fi
+        hyprctl dispatch "hl.dsp.window.move({ workspace = ${TARGET_WS} })"
     else
-        hyprctl dispatch movetoworkspace "special:${SCRATCH_NAME}"
+        hyprctl dispatch "hl.dsp.window.move({ workspace = \"special:${SCRATCH_NAME}\" })"
     fi
 fi
 

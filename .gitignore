@@ -38,3 +38,10 @@ Cache/
 # Package list (optional - keep local only if you prefer)
 # pkglist.txt
 
+
+# Root-owned leftovers moved aside
+*.root-old/
+*.root-old
+
+# Generated caches
+*.tmp

@@ -1,18 +1,58 @@
-{
-  "layer": "top",
-  "position": "top",
-  "output": ["HDMI-A-2", "DP-2"],
-  "margin-top": 10,
-  "modules-center": ["hyprland/workspaces"],
-  
-  "hyprland/workspaces": {
-    "format": "{name}",
-    "show-special": true,
-    "persistent-workspaces": {
-      "HDMI-A-2": [11, 12, 13],
-      "DP-2": [21, 22, 23]
-    },
-    "on-click": "activate"
-  }
-}
+[
+  {
+    "name": "left",
+    "layer": "top",
+    "position": "top",
+    "output": ["HDMI-A-2"],
+    "margin-top": 10,
+    "modules-center": ["group/wsbox"],
 
+    "group/wsbox": {
+      "orientation": "horizontal",
+      "modules": ["ext/workspaces", "custom/special"]
+    },
+
+    "ext/workspaces": {
+      "format": "{name}",
+      "sort-by-id": true,
+      "all-outputs": false
+    },
+
+    "custom/special": {
+      "exec": "~/.config/waybar/scripts/special-indicator.sh HDMI-A-2",
+      "interval": 1,
+      "return-type": "json",
+      "format": "{}",
+      "hide-empty-text": true,
+      "tooltip": true
+    }
+  },
+  {
+    "name": "right",
+    "layer": "top",
+    "position": "top",
+    "output": ["DP-2"],
+    "margin-top": 10,
+    "modules-center": ["group/wsbox"],
+
+    "group/wsbox": {
+      "orientation": "horizontal",
+      "modules": ["ext/workspaces", "custom/special"]
+    },
+
+    "ext/workspaces": {
+      "format": "{name}",
+      "sort-by-id": true,
+      "all-outputs": false
+    },
+
+    "custom/special": {
+      "exec": "~/.config/waybar/scripts/special-indicator.sh DP-2",
+      "interval": 1,
+      "return-type": "json",
+      "format": "{}",
+      "hide-empty-text": true,
+      "tooltip": true
+    }
+  }
+]

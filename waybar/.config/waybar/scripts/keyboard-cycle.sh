@@ -1,25 +1,22 @@
 #!/bin/bash
 
-# Get current layout code from the layout field
-CURRENT=$(hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .layout')
+# Main keyboard device (the one Hyprland reports as main)
+KBD=$(hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .name')
 
-# Determine next layout in cycle: no -> ro -> us -> no
-case "$CURRENT" in
-    "no") NEXT="ro" ;;
-    "ro") NEXT="us" ;;
-    "us") NEXT="no" ;;
-    *) NEXT="no" ;;
-esac
-
-# If called with "toggle", change the layout
-if [ "$1" = "toggle" ]; then
-    # This actually changes the system keyboard layout
-    hyprctl keyword input:kb_layout "$NEXT"
-    
-    # Update current to display the new layout immediately
-    CURRENT="$NEXT"
+# If called with "toggle", switch to the next configured layout (input:kb_layout = no,us).
+# "keyword" is not usable on Hyprland 0.56+ (Lua parser), so use switchxkblayout.
+if [ "$1" = "toggle" ] && [ -n "$KBD" ]; then
+    hyprctl switchxkblayout "$KBD" next > /dev/null
 fi
 
+# Read the ACTIVE layout name (e.g. "Norwegian" / "English (US)") and shorten it for display
+ACTIVE=$(hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap')
+case "$ACTIVE" in
+    "Norwegian") CURRENT="no" ;;
+    "English (US)") CURRENT="us" ;;
+    *) CURRENT=$(echo "$ACTIVE" | tr '[:upper:]' '[:lower:]' | cut -c1-2) ;;
+esac
+
 # Output JSON
-echo "{\"text\": \"$CURRENT\", \"tooltip\": \"Layout: $CURRENT (Click to cycle)\"}"
+echo "{\"text\": \"$CURRENT\", \"tooltip\": \"Layout: $ACTIVE (Click to cycle)\"}"
 

@@ -1,0 +1,43 @@
+@import url("colors.css");
+
+* {
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    background: transparent;
+}
+
+window {
+    background: alpha(@crust, 0.95);
+    border: 2px solid @lavender;
+    border-radius: 24px;
+}
+
+button {
+    background: @mantle;
+    color: @text;
+    border: 3px solid @surface0;
+    border-radius: 18px;
+    margin: 10px;
+    padding: 20px;
+    min-width: 120px;
+    min-height: 120px;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: @surface0;
+    border-color: @lavender;
+    color: @lavender;
+}
+
+button:focus {
+    border-color: @pink;
+    outline: none;
+}
+
+button#lock:hover     { color: @red;    border-color: @red; }
+button#logout:hover   { color: @peach;  border-color: @peach; }
+button#suspend:hover  { color: @yellow; border-color: @yellow; }
+button#restart:hover  { color: @teal;   border-color: @teal; }
+button#shutdown:hover { color: @pink;   border-color: @pink; }

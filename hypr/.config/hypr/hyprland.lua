@@ -35,6 +35,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
 
+    -- Notification log for the dashboard inbox tile
+    hl.exec_cmd("python3 " .. os.getenv("HOME") .. "/.config/hypr/scripts/notify-log.py")
+
     -- Idle handling: lock after 10 min, screens off after 11 (see hypridle.conf)
     -- DISABLED until hyprlock is confirmed stable (it crashed once, see notes):
     -- hl.exec_cmd("hypridle")

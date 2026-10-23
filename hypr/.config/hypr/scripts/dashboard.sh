@@ -25,6 +25,7 @@ TILES=(
     "dash-nowplaying|$K dash-nowplaying python3 $S/nowplaying.py"
     "dash-cal|$K dash-cal python3 $S/dashboard-tile.py cal"
     "dash-weather|$K dash-weather python3 $S/dashboard-tile.py weather"
+    "dash-inbox|$K dash-inbox python3 $S/inbox-tile.py"
 )
 
 # Spotify must be running for the now-playing tile (playerctl). It lives on a
@@ -69,6 +70,7 @@ arrange() {
     place dash-nowplaying R 0 0
     place dash-cal        R 1 0
     place dash-weather    R 0 1
+    place dash-inbox      R 1 1
 }
 
 if [ "${1:-}" != "arrange" ]; then

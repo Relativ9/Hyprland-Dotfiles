@@ -1,9 +1,14 @@
 #!/bin/bash
-# Catppuccin theme switcher.
-#   theme-switch.sh <macchiato|mocha|frappe|latte>   apply a theme
-#   theme-switch.sh pick                             rofi picker
-#   theme-switch.sh restore                          re-render the saved theme (no reload)
-#   theme-switch.sh cycle                            next theme in list
+# Theme switcher.
+#   theme-switch.sh <slug>          apply a flavour by file name, e.g. mocha, tokyo-storm
+#   theme-switch.sh pick            two-level rofi picker: family, then flavour (Esc goes back)
+#   theme-switch.sh restore         re-render the saved theme (no reload)
+#   theme-switch.sh cycle           next flavour in list
+#   theme-switch.sh families        list families with flavour counts (no UI)
+#   theme-switch.sh flavours <fam>  list the slugs in a family (no UI)
+#
+# Each palette has FAMILY= and FLAVOUR= for the picker; the saved state and wallpaper
+# folders use the flat slug (file name) so nothing else depends on the grouping.
 #
 # Renders templates/* (placeholders like @@base@@) into each app's generated
 # color file, then reloads whatever can be reloaded live.
@@ -15,27 +20,63 @@ STATE="${XDG_STATE_HOME:-$HOME/.local/state}/theme"
 mapfile -t THEMES < <(cd "$T/palettes" && ls *.pal | sed "s/\.pal$//")
 mkdir -p "$STATE"
 
+# pal_field <slug> <FIELD> -> value of FIELD in that palette (quotes removed)
+pal_field() { grep -m1 "^$2=" "$T/palettes/$1.pal" | cut -d= -f2- | tr -d '"'; }
+# flavours_of <family> -> slugs in that family, one per line
+flavours_of() { for n in "${THEMES[@]}"; do [ "$(pal_field "$n" FAMILY)" = "$1" ] && echo "$n"; done; }
+mapfile -t FAMILIES < <(for n in "${THEMES[@]}"; do pal_field "$n" FAMILY; done | sort -u)
+
 CMD="${1:-pick}"
 CUR=$(cat "$STATE/current" 2>/dev/null || echo macchiato)
 
-case "$CMD" in
-    pick)
-        # Row format: "<name> <color dots>" - name is always the first word.
-        DOT=$(printf '\xe2\x97\x8f')
+# Two-level picker. Level 1: families (with flavour counts). Level 2: flavours of that family.
+# A family with a single flavour applies straight away. Esc on level 2 returns to level 1,
+# Esc on level 1 cancels (returns 1). rofi -format i returns the row index, so no text parsing.
+pick_theme() {
+    local DOT cur_fam fam idx s flav sw c v tag rows
+    local -a slugs
+    DOT=$(printf '\xe2\x97\x8f')
+    cur_fam=$(pal_field "$CUR" FAMILY)
+    while :; do
         rows=""
-        for n in "${THEMES[@]}"; do
-            sw=""
+        for fam in "${FAMILIES[@]}"; do
+            tag=""; [ "$fam" = "$cur_fam" ] && tag=" (current)"
+            rows+="$fam ($(flavours_of "$fam" | wc -l))$tag"$'\n'
+        done
+        idx=$(printf '%s' "$rows" | rofi -dmenu -i -format i -p "Family" \
+            -theme "$HOME/.config/rofi/theme/picker.rasi") || return 1
+        [ -n "$idx" ] || return 1
+        fam="${FAMILIES[$idx]}"
+
+        mapfile -t slugs < <(flavours_of "$fam")
+        if [ "${#slugs[@]}" -eq 1 ]; then
+            CMD="${slugs[0]}"; return 0
+        fi
+
+        rows=""
+        for s in "${slugs[@]}"; do
+            flav=$(pal_field "$s" FLAVOUR); sw=""
             for c in base lavender mauve blue green yellow peach red; do
-                v=$(grep "^$c=" "$T/palettes/$n.pal" | cut -d= -f2)
+                v=$(pal_field "$s" "$c")
                 sw+="<span foreground='#$v'>$DOT</span> "
             done
-            tag=""; [ "$n" = "$CUR" ] && tag=" (current)"
-            rows+=$(printf '%-12s %s%s' "$n" "$sw" "$tag")$'\n'
+            tag=""; [ "$s" = "$CUR" ] && tag=" (current)"
+            rows+=$(printf '%-14s %s%s' "$flav" "$sw" "$tag")$'\n'
         done
-        sel=$(printf '%s' "$rows" | rofi -dmenu -i -markup-rows -p "Theme" \
-            -theme "$HOME/.config/rofi/theme/picker.rasi") || exit 0
-        CMD=$(sed 's/<[^>]*>//g' <<< "$sel" | awk '{print $1; exit}')
-        [ -n "$CMD" ] || exit 0 ;;
+        idx=$(printf '%s' "$rows" | rofi -dmenu -i -markup-rows -format i -p "$fam" \
+            -theme "$HOME/.config/rofi/theme/picker.rasi") || continue
+        [ -n "$idx" ] || continue
+        CMD="${slugs[$idx]}"; return 0
+    done
+}
+
+case "$CMD" in
+    pick)
+        pick_theme || exit 0 ;;
+    families)
+        for fam in "${FAMILIES[@]}"; do echo "$fam ($(flavours_of "$fam" | wc -l))"; done; exit 0 ;;
+    flavours)
+        flavours_of "${2:?family name}"; exit 0 ;;
     cycle)
         CMD=${THEMES[0]}
         for i in "${!THEMES[@]}"; do
@@ -98,6 +139,8 @@ gsettings set org.gnome.desktop.interface gtk-theme "$GTK" 2>/dev/null
 gsettings set org.gnome.desktop.interface icon-theme "$ICON" 2>/dev/null
 
 if [ "$RELOAD" = 1 ]; then
+    # switch the wallpaper to one from this theme's folder (in the background, it crops to fit)
+    "$HOME/.config/themes/wallpaper-for-theme.sh" "$CMD" >/dev/null 2>&1 &
     pkill -USR1 -x kitty 2>/dev/null
     hyprctl reload >/dev/null 2>&1
     "$HOME/.config/waybar/scripts/launch.sh" >/dev/null 2>&1 &

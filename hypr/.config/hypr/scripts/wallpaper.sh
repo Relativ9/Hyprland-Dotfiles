@@ -53,12 +53,18 @@ set_img() { # output file
     awww img -o "$1" --transition-type "$TRANSITION" --transition-duration "$TRANSITION_DURATION" "$2"
 }
 
+# Crops are all rendered first (in parallel), then every output is switched within
+# milliseconds of each other, so the fades start together on all monitors.
 if [ "$MODE" = "same" ]; then
     while read -r NAME _ _ W H; do
         OUT="$CACHE_DIR/${NAME}.png"
-        magick "$IMAGE" -resize "${W}x${H}^" -gravity center -extent "${W}x${H}" "$OUT"
-        set_img "$NAME" "$OUT"
+        magick "$IMAGE" -resize "${W}x${H}^" -gravity center -extent "${W}x${H}" +repage -define png:compression-level=0 "$OUT" &
     done <<< "$MONITORS"
+    wait
+    while read -r NAME _ _ _ _; do
+        set_img "$NAME" "$CACHE_DIR/${NAME}.png" &
+    done <<< "$MONITORS"
+    wait
 elif [ "$MODE" = "span" ]; then
     # Bounding box of the whole layout.
     read -r MINX MINY CW CH < <(awk '
@@ -70,14 +76,19 @@ elif [ "$MODE" = "span" ]; then
         END { print minx, miny, maxx-minx, maxy-miny }' <<< "$MONITORS")
 
     # Fit the image over the whole canvas (cover + center crop), once.
+    # png:compression-level=0 is the big win: default PNG compression on the full canvas took ~4.5s, level 0 ~0.4s.
     CANVAS="$CACHE_DIR/canvas.png"
-    magick "$IMAGE" -resize "${CW}x${CH}^" -gravity center -extent "${CW}x${CH}" +repage "$CANVAS"
+    magick "$IMAGE" -resize "${CW}x${CH}^" -gravity center -extent "${CW}x${CH}" +repage -define png:compression-level=0 "$CANVAS"
 
     while read -r NAME X Y W H; do
         OUT="$CACHE_DIR/${NAME}.png"
-        magick "$CANVAS" -crop "${W}x${H}+$((X - MINX))+$((Y - MINY))" +repage "$OUT"
-        set_img "$NAME" "$OUT"
+        magick "$CANVAS" -crop "${W}x${H}+$((X - MINX))+$((Y - MINY))" +repage -define png:compression-level=0 "$OUT" &
     done <<< "$MONITORS"
+    wait
+    while read -r NAME _ _ _ _; do
+        set_img "$NAME" "$CACHE_DIR/${NAME}.png" &
+    done <<< "$MONITORS"
+    wait
 else
     echo "Unknown mode: $MODE (span|same|restore)" >&2
     exit 1

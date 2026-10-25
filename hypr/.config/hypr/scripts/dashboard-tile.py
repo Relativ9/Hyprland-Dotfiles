@@ -26,8 +26,10 @@ import select
 import shutil
 import subprocess
 import sys
+import termios
 import textwrap
 import threading
+import tty
 import time
 import unicodedata
 import urllib.parse
@@ -418,40 +420,43 @@ def tile_system(feeds, cols, rows, now, tick):
     s = feeds["sys"].value
     if not s:
         return ["", center(DIM + ("(psutil unavailable)" if feeds["sys"].ok is False else "loading…") + RST, cols)]
-    w = max(cols - 20, 12)
+    w = max(cols - 32, 16)   # reserve space for label + stats
     L = ["", center(ACC + BOLD + "󰾆  System Monitor" + RST, cols), ""]
 
     def row(label, frac, text, thr=(0.6, 0.85)):
-        L.append(f"  {DIM}{label:<7}{RST} {gauge(frac, w, thr)} {text}")
+        L.append(f"  {DIM}{label:<6}{RST} {gauge(frac, w, thr)} {text}")
 
     # CPU & Memory
-    row("CPU", s["cpu_pct"] / 100, f"{s['cpu_pct']:4.1f}%  {s['cpu_temp']:.0f}°C")
-    row("Memory", s["mem_pct"] / 100, f"{s['mem_used'] / 1024**3:4.1f}/{s['mem_total'] / 1024**3:.0f}G")
+    row("CPU", s["cpu_pct"] / 100, f"{s['cpu_pct']:4.1f}% {s['cpu_temp']:3.0f}°C")
+    row("Memory", s["mem_pct"] / 100, f"{s['mem_used'] / 1024**3:4.1f}/{s['mem_total'] / 1024**3:3.0f}G")
     if s["swap_total"]:
-        row("Swap", s["swap_pct"] / 100, f"{s['swap_used'] / 1024**3:4.1f}/{s['swap_total'] / 1024**3:.0f}G")
+        row("Swap", s["swap_pct"] / 100, f"{s['swap_used'] / 1024**3:4.1f}/{s['swap_total'] / 1024**3:3.0f}G")
     # GPU
     if s["gpu_name"]:
-        row("GPU", s["gpu_util"] / 100, f"{s['gpu_util']:4.1f}%  {s['gpu_temp']:.0f}°C")
-        row("VRAM", s["gpu_vram"] / max(s["gpu_vram_total"], 1), f"{s['gpu_vram'] / 1024:4.1f}/{s['gpu_vram_total'] / 1024:.0f}G")
-    # Power estimate
-    L.append(f"  {DIM}Power  {RST} {ACC2}~{s['power_est']:4.0f}W{RST} {SUB}(CPU {s['cpu_pct'] * CPU_TDP / 100:.0f}W + GPU {s.get('gpu_power', 0):.0f}W + 30W){RST}")
+        row("GPU", s["gpu_util"] / 100, f"{s['gpu_util']:4.1f}% {s['gpu_temp']:3.0f}°C")
+        row("VRAM", s["gpu_vram"] / max(s["gpu_vram_total"], 1), f"{s['gpu_vram'] / 1024:3.1f}/{s['gpu_vram_total'] / 1024:2.0f}G")
+    # Power estimate (keep it simple)
+    cpu_w = s["cpu_pct"] * CPU_TDP / 100
+    gpu_w = s.get("gpu_power", 0)
+    L.append(f"  {DIM}Power {RST} {ACC2}~{s['power_est']:3.0f}W{RST}  {SUB}CPU {cpu_w:2.0f}W + GPU {gpu_w:2.0f}W + 30W{RST}")
     L.append("")
     # History sparklines
-    sw = max(cols - 4, 10)
+    sw = max(cols - 16, 10)
     for name, key in [("CPU", "cpu"), ("Memory", "mem"), ("GPU", "gpu")]:
         if key == "gpu" and not s["gpu_name"]:
             continue
         hist = SYS_HIST[key][-sw:]
         if hist:
             line = "".join(SPARK[min(int(v / 100 * 8 + 0.5), 8)] for v in hist).rjust(sw)
-            L.append("  " + DIM + f"{name:<7}{RST} " + ACC2 + line + RST)
+            L.append("  " + DIM + f"{name:<6}{RST} " + ACC2 + line + RST)
     L.append("")
     # Disks
     L.append("  " + ACC + BOLD + "Disks" + RST)
     for mount, total, used, pct in s["disks"][:4]:
-        label = mount if len(mount) <= 12 else mount[:10] + "…"
-        bar = gauge(pct / 100, max(w - 8, 6), (0.7, 0.9))
-        L.append(f"  {label:<12} {bar} {used / 1024**3:4.0f}/{total / 1024**3:4.0f}G")
+        label = mount if len(mount) <= 8 else mount[:7] + "…"
+        dw = max(cols - 28, 10)
+        bar = gauge(pct / 100, dw, (0.7, 0.9))
+        L.append(f"  {label:<8} {bar} {used / 1024**3:3.0f}/{total / 1024**3:3.0f}G")
     return L
 
 
@@ -476,16 +481,20 @@ def main():
         print(f"unknown tile: {tile}")
         sys.exit(1)
     render_fn = {"cal": tile_cal, "weather": tile_weather, "gpu": tile_gpu, "system": tile_system}[tile]
+    
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
     sys.stdout.write("\x1b[?25l\x1b[?1049h\x1b[?1000h\x1b[?1006h")
     sys.stdout.flush()
     scroll_offset = 0
     t0, last_key = time.time(), None
     try:
+        tty.setcbreak(fd)
         while True:
             # mouse wheel: ESC [ < 64/65 ; x ; y M -> up/down
             r, _, _ = select.select([sys.stdin], [], [], 0.02)
             if r:
-                data = os.read(sys.stdin.fileno(), 1024).decode(errors="ignore")
+                data = os.read(fd, 1024).decode(errors="ignore")
                 for m in re.finditer(r"\x1b\[<(64|65);(\d+);(\d+)M", data):
                     scroll_offset += 1 if m.group(1) == "64" else -1
             now = dt.datetime.now()
@@ -502,6 +511,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
         sys.stdout.write("\x1b[?1000l\x1b[?1006l\x1b[?1049l\x1b[?25h")
         sys.stdout.flush()
 

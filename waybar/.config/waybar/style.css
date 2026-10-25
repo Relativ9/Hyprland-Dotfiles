@@ -84,6 +84,37 @@ tooltip label {
     border: 1px dashed @yellow;
 }
 
+/* Clickable workspace buttons (scripts/ws-button.sh): one custom module per workspace.
+   Same look as the native #workspaces buttons, with a fixed width and gap so each is easy to hit.
+   GTK CSS has no attribute-prefix selectors, so each id is listed explicitly. */
+#custom-ws-1, #custom-ws-2, #custom-ws-3, #custom-ws-4, #custom-ws-5, #custom-ws-11, #custom-ws-12, #custom-ws-13, #custom-ws-21, #custom-ws-22, #custom-ws-23 {
+    padding: 4px 8px;
+    margin: 0 2px;
+    border-radius: 8px;
+    color: @subtext1;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+#custom-ws-1.occupied, #custom-ws-2.occupied, #custom-ws-3.occupied, #custom-ws-4.occupied, #custom-ws-5.occupied, #custom-ws-11.occupied, #custom-ws-12.occupied, #custom-ws-13.occupied, #custom-ws-21.occupied, #custom-ws-22.occupied, #custom-ws-23.occupied {
+    color: @text;
+}
+
+#custom-ws-1.empty, #custom-ws-2.empty, #custom-ws-3.empty, #custom-ws-4.empty, #custom-ws-5.empty, #custom-ws-11.empty, #custom-ws-12.empty, #custom-ws-13.empty, #custom-ws-21.empty, #custom-ws-22.empty, #custom-ws-23.empty {
+    color: @surface2;
+}
+
+#custom-ws-1.active, #custom-ws-2.active, #custom-ws-3.active, #custom-ws-4.active, #custom-ws-5.active, #custom-ws-11.active, #custom-ws-12.active, #custom-ws-13.active, #custom-ws-21.active, #custom-ws-22.active, #custom-ws-23.active {
+    background: @surface2;
+    color: @rosewater;
+    font-weight: bold;
+}
+
+#custom-ws-1:hover, #custom-ws-2:hover, #custom-ws-3:hover, #custom-ws-4:hover, #custom-ws-5:hover, #custom-ws-11:hover, #custom-ws-12:hover, #custom-ws-13:hover, #custom-ws-21:hover, #custom-ws-22:hover, #custom-ws-23:hover {
+    background: @surface0;
+    color: @lavender;
+}
+
 #custom-special {
     color: @subtext1;
     background: transparent;

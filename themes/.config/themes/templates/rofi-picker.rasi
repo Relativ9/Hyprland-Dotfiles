@@ -59,7 +59,7 @@ entry {
 
 listview {
     background-color: transparent;
-    lines: 8;
+    lines: 14;
     columns: 1;
     fixed-height: false;
     scrollbar: false;

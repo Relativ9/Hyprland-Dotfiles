@@ -23,3 +23,13 @@ map("n", "<leader>sr", function()
   vim.notify("Configuration reloaded!", vim.log.levels.INFO)
 end, { desc = "[S]ource [R]eload Config" })
 
+-- 4. File Save / Quit
+-- Space + w: Writes the file.
+map("n", "<leader>w", ":write<CR>", { desc = "Save file (write)" })
+
+-- Space + q: Quits immediately, discarding ALL unsaved changes without prompting.
+map("n", "<leader>q", ":quit!<CR>", { desc = "Force quit (discard changes)" })
+
+-- Space + x: Saves AND quits in one go.
+map("n", "<leader>x", ":x<CR>", { desc = "Save and quit" })
+

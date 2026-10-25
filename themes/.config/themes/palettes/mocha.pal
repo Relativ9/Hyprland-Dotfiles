@@ -1,4 +1,6 @@
 NAME=mocha
+FAMILY="Catppuccin"
+FLAVOUR="Mocha"
 DARK=1
 GTK=Catppuccin-Lavender-Dark
 ICON=Catppuccin-Mocha

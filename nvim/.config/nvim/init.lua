@@ -6,21 +6,5 @@ require("config.options")
 require("config.keymaps")
 require("config.lazy")
 
--- Custom keybinds -- 
-
-vim.g.mapleader = " "
-
--- Usage: Space + w
--- Behavior: Writes the file. If you want to quit after, you press Space + q next.
-vim.keymap.set("n", "<leader>w", ":write<CR>", { desc = "Save file (write)" })
-
--- Usage: Space + q
--- Behavior: Quits immediately, discarding ALL unsaved changes without prompting.
--- This replaces your need for a separate 'normal quit' bind.
-vim.keymap.set("n", "<leader>q", ":quit!<CR>", { desc = "Force quit (discard changes)" })
-
--- Usage: Space + x (or Space + s)
--- Behavior: Saves AND quits in one go. 
--- Useful if you realize halfway through typing <leader>w that you actually wanted to leave.
-vim.keymap.set("n", "<leader>x", ":x<CR>", { desc = "Save and quit" })
+-- Custom keybinds are defined in lua/config/keymaps.lua
 

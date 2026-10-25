@@ -1,4 +1,6 @@
 NAME=frappe
+FAMILY="Catppuccin"
+FLAVOUR="Frappe"
 DARK=1
 GTK=Catppuccin-Lavender-Dark
 ICON=Catppuccin-Frappe

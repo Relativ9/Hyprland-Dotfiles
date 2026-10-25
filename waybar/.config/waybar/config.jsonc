@@ -111,17 +111,100 @@
   },
 
   /* --- CENTER: TEMPLATE (Unchanged) --- */
-  "ext/workspaces": {
-    "format": "{name}",
-    "sort-by-id": true,
-    "all-outputs": false
-  },
 
   "group/wsbox": {
     "orientation": "horizontal",
-    "modules": ["ext/workspaces", "custom/special"]
+    "modules": ["custom/ws-1", "custom/ws-2", "custom/ws-3", "custom/ws-4", "custom/ws-5", "custom/special"]
   },
 
+  "custom/ws-1": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 1",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 1"
+  },
+  "custom/ws-2": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 2",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 2"
+  },
+  "custom/ws-3": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 3",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 3"
+  },
+  "custom/ws-4": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 4",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 4"
+  },
+  "custom/ws-5": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 5",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 5"
+  },
+  "custom/ws-11": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 11",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 11"
+  },
+  "custom/ws-12": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 12",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 12"
+  },
+  "custom/ws-13": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 13",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 13"
+  },
+  "custom/ws-21": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 21",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 21"
+  },
+  "custom/ws-22": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 22",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 22"
+  },
+  "custom/ws-23": {
+    "exec": "~/.config/waybar/scripts/ws-button.sh 23",
+    "interval": 1,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/ws-button.sh focus 23"
+  },
   "custom/special": {
     "exec": "~/.config/waybar/scripts/special-indicator.sh DP-3",
     "interval": 1,

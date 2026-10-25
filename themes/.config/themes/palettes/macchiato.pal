@@ -1,4 +1,6 @@
 NAME=macchiato
+FAMILY="Catppuccin"
+FLAVOUR="Macchiato"
 DARK=1
 GTK=catppuccin-macchiato-lavender-standard+default
 ICON=Catppuccin-Macchiato

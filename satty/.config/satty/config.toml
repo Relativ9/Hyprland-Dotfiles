@@ -18,12 +18,12 @@ notification-thumbnail = "screenshot"
 
 [color-palette]
 palette = [
-    "#ff757fff",
-    "#ff966cff",
-    "#ffc777ff",
-    "#c3e88dff",
-    "#0db9d7ff",
-    "#c099ffff",
-    "#c8d3f5ff",
-    "#191b29ff",
+    "#ff5555ff",
+    "#ffb86cff",
+    "#f1fa8cff",
+    "#50fa7bff",
+    "#6272a4ff",
+    "#bd93f9ff",
+    "#f8f8f2ff",
+    "#191a21ff",
 ]
